@@ -12,9 +12,8 @@
 #
 # -- END LICENSE BLOCK ------------------------------------
 
-if (!defined('DC_RC_PATH'))
-{
-	return null;
+if (!defined('DC_RC_PATH')) {
+    return null;
 }
 
-require_once dirname(__FILE__).'/_widgets.php';
+require_once dirname(__FILE__) . '/_widgets.php';

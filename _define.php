@@ -12,22 +12,20 @@
 #
 # -- END LICENSE BLOCK ------------------------------------
 
-if (!defined('DC_RC_PATH'))
-{
-	return null;
+if (!defined('DC_RC_PATH')) {
+    return null;
 }
 
 $this->registerModule(
-	/* Name */			"Entry Photo Exif Widget",
-	/* Description*/		"Show images exif of an entry",
-	/* Author */			"Jean-Christian Denis and contibutors",
-	/* Version */			'1.0',
-	/* Properties */
-	array(
-		'permissions' => 'admin',
-		'type' => 'plugin',
-		'dc_min' => '2.10',
-		'support' => 'http://forum.dotclear.org/',
-		'details' => 'http://plugins.dotaddict.org/dc2/details/photoExifWidget'
-	)
+    'Entry Photo Exif Widget',              // Name
+    'Show images exif of an entry',         // Description
+    'Jean-Christian Denis and contibutors', // Author
+    '1.0.1',                                // Version
+    [
+        'permissions' => 'admin',
+        'type'        => 'plugin',
+        'dc_min' => '2.10',
+        'support' => 'http://forum.dotclear.org/',
+        'details' => 'https://plugins.dotaddict.org/dc2/details/entryPhotoExifWidget'
+    ]
 );
