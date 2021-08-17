@@ -1,0 +1,209 @@
+# Language: Français
+# Module: entryPhotoExifWidget - 1.0
+# Date: 2016-11-04 09:16:46
+# Translated with translater 2063.10.22
+
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Project-Id-Version: entryPhotoExifWidget 1.0\n"
+"POT-Creation-Date: \n"
+"PO-Revision-Date: 2016-11-04T09:16:46+00:00\n"
+"Last-Translator: Jean-Christian Denis\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: _widgets.php:54
+msgid "Entry Photo Exif"
+msgstr "EXIF photo du billet"
+
+#: _widgets.php:57
+msgid "Show images exif of an entry"
+msgstr "Afficher les EXIF des images d'un billet"
+
+#: _widgets.php:68
+#: _widgets.php:74
+#: _widgets.php:80
+#: _widgets.php:86
+#: _widgets.php:92
+#: _widgets.php:98
+#: _widgets.php:104
+#: _widgets.php:110
+#: _widgets.php:116
+#: _widgets.php:122
+#: _widgets.php:128
+#: _widgets.php:134
+#: _widgets.php:140
+#: _widgets.php:146
+msgid "Show metadata: %s"
+msgstr "Afficher les métadonnées de : %s"
+
+#: _widgets.php:74
+msgid "Descritpion"
+msgstr "Description"
+
+#: _widgets.php:80
+msgid "Location"
+msgstr "Lieu"
+
+#: _widgets.php:92
+msgid "Manufacturer"
+msgstr "Fabriquant"
+
+#: _widgets.php:98
+msgid "Model"
+msgstr "Modèle"
+
+#: _widgets.php:104
+msgid "Lens"
+msgstr "Objectif"
+
+#: _widgets.php:110
+msgid "Exposure program"
+msgstr "Program d'exposition"
+
+#: _widgets.php:116
+msgid "Exposure time"
+msgstr "Temps d'exposition"
+
+#: _widgets.php:122
+msgid "Aperture"
+msgstr "Ouverture"
+
+#: _widgets.php:128
+msgid "Iso speed rating"
+msgstr "ISO"
+
+#: _widgets.php:134
+msgid "Focal lengh"
+msgstr "Longueur de focale"
+
+#: _widgets.php:140
+msgid "Exposure bias value"
+msgstr "Décalage d'exposition"
+
+#: _widgets.php:146
+msgid "Metering mode"
+msgstr "Mode de mesure"
+
+#: _widgets.php:152
+msgid "Show empty metadata"
+msgstr "Afficher les métadonées vides"
+
+#: _widgets.php:158
+msgid "Category limit:"
+msgstr "Limiter à une catégorie :"
+
+#: _widgets.php:165
+msgid "Thumbnail size:"
+msgstr "Taille de la miniature :"
+
+#: _widgets.php:367
+msgid "Location:"
+msgstr "Lieu :"
+
+#: _widgets.php:369
+msgid "Manufacturer:"
+msgstr "Fabricant :"
+
+#: _widgets.php:370
+msgid "Model:"
+msgstr "Modèle :"
+
+#: _widgets.php:371
+msgid "Lens:"
+msgstr "Objectif :"
+
+#: _widgets.php:372
+msgid "Program:"
+msgstr "Programme :"
+
+#: _widgets.php:373
+msgid "Speed:"
+msgstr "Vitesse :"
+
+#: _widgets.php:374
+msgid "Aperture:"
+msgstr "Ouverture :"
+
+#: _widgets.php:375
+msgid "ISO:"
+msgstr "ISO :"
+
+#: _widgets.php:376
+msgid "Focal:"
+msgstr "Focale :"
+
+#: _widgets.php:377
+msgid "Exposure Bias:"
+msgstr "Décalage d'exposition :"
+
+#: _widgets.php:378
+msgid "Metering mode:"
+msgstr "Mode de mesure :"
+
+#: _widgets.php:382
+msgid "Not defined"
+msgstr "Non défini"
+
+#: _widgets.php:383
+msgid "Manual"
+msgstr "Manuel"
+
+#: _widgets.php:384
+msgid "Normal program"
+msgstr "Normal"
+
+#: _widgets.php:385
+msgid "Aperture priority"
+msgstr "Priorité à l'ouverture"
+
+#: _widgets.php:386
+msgid "Shutter priority"
+msgstr "Priorité à la vitesse"
+
+#: _widgets.php:387
+msgid "Creative program"
+msgstr "Création"
+
+#: _widgets.php:388
+msgid "Action program"
+msgstr "Action"
+
+#: _widgets.php:389
+msgid "Portait mode"
+msgstr "Portrait"
+
+#: _widgets.php:390
+msgid "Landscape mode"
+msgstr "Paysage"
+
+#: _widgets.php:394
+msgid "Unknow"
+msgstr "Inconnu"
+
+#: _widgets.php:395
+msgid "Average"
+msgstr "Moyenne"
+
+#: _widgets.php:396
+msgid "Center-weighted average"
+msgstr "Centrale pondèrée"
+
+#: _widgets.php:397
+msgid "Spot"
+msgstr "Spot"
+
+#: _widgets.php:398
+msgid "Multi spot"
+msgstr "Multi spot"
+
+#: _widgets.php:399
+msgid "Pattern"
+msgstr "Multizone"
+
+#: _widgets.php:400
+msgid "Partial"
+msgstr "Partielle"
+
