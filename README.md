@@ -21,7 +21,7 @@ Dotaddict repository. (See Dotclear's documentation to know how do this)
 
 Add and configure "Photo Exif Widget" from widgets manager.
 
-# MORE
+## MORE
 
  * License : GNU GPL v2
  * Source & contribution : [GitHub Page](https://github.com/JcDenis/entryPhotoExifWidget)
