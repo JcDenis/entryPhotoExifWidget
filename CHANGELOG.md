@@ -1,5 +1,6 @@
-1.0.3
-- [x] update php headers to phpdoc style
+1.0.3 - 2021.09.2
+- update php headers to phpdoc style
+- add dcstore.xml
 
 1.0.2 - 2021-08-19
 - Update license 

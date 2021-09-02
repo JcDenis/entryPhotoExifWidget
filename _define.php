@@ -16,15 +16,16 @@ if (!defined('DC_RC_PATH')) {
 }
 
 $this->registerModule(
-    'Entry Photo Exif Widget',              // Name
-    'Show images exif of an entry',         // Description
-    'Jean-Christian Denis and contibutors', // Author
-    '1.0.2',                                // Version
+    'Entry Photo Exif Widget',
+    'Show images exif of an entry',
+    'Jean-Christian Denis and contibutors',
+    '1.0.3',
     [
+        'requires' => [['core', '2.19']],
         'permissions' => 'admin',
         'type'=> 'plugin',
-        'dc_min' => '2.18',
         'support' => 'https://github.com/JcDenis/entryPhotoExifWidget',
-        'details' => 'https://plugins.dotaddict.org/dc2/details/entryPhotoExifWidget'
+        'details' => 'https://plugins.dotaddict.org/dc2/details/entryPhotoExifWidget',
+        'repository' => 'https://raw.githubusercontent.com/JcDenis/entryPhotoExifWidget/master/dcstore.xml'
     ]
 );
