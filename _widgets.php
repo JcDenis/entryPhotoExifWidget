@@ -1,15 +1,15 @@
 <?php
-# -- BEGIN LICENSE BLOCK ----------------------------------
-#
-# This file is part of entryPhotoExifWidget, a plugin for Dotclear 2.
-# 
-# Copyright (c) 2009-2021 Jean-Christian Denis and contributors
-# 
-# Licensed under the GPL version 2.0 license.
-# A copy of this license is available in LICENSE file or at
-# http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
-#
-# -- END LICENSE BLOCK ------------------------------------
+/**
+ * @brief entryPhotoExifWidget, a plugin for Dotclear 2
+ * 
+ * @package Dotclear
+ * @subpackage Plugin
+ * 
+ * @author Jean-Christian Denis and contibutors
+ * 
+ * @copyright Jean-Christian Denis
+ * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
+ */
 
 if (!defined('DC_RC_PATH')) {
     return null;
@@ -350,7 +350,7 @@ class entryPhotoExifWidget
                 'title' => $alt
             );
         }
-        
+
         return $res;
     }
 
@@ -372,7 +372,7 @@ class entryPhotoExifWidget
             'ExposureBiasValue' => array(__('Exposure Bias:'), ''),
             'MeteringMode' => array(__('Metering mode:'), '')
         );
-        
+
         $exp_prog = array(
             0 => __('Not defined'),
             1 => __('Manual'),
@@ -384,7 +384,7 @@ class entryPhotoExifWidget
             7 => __('Portait mode'),
             8 => __('Landscape mode')
         );
-        
+
         $met_mod = array(
             0 => __('Unknow'),
             1 => __('Average'),
@@ -395,7 +395,7 @@ class entryPhotoExifWidget
             6 => __('Partial'),
             7 => __('Other')
         );
-        
+
         if (!$src || !file_exists($src)) return $metas;
 
         $m = imageMeta::readMeta($src);
@@ -428,7 +428,7 @@ class entryPhotoExifWidget
         {
             $metas['Location'][1] .= html::escapeHTML($m['Country']);
         }
-        
+
         # DateTimeOriginal
         if (!empty($m['DateTimeOriginal']))
         {
@@ -436,71 +436,71 @@ class entryPhotoExifWidget
             $dt_tz = $core->blog->settings->system->blog_timezone;
             $metas['DateTimeOriginal'][1] = dt::dt2str($dt_ft, $m['DateTimeOriginal'], $dt_tz);
         }
-        
+
         # Make
         if (isset($m['Make']))
         {
             $metas['Make'][1] = html::escapeHTML($m['Make']);
         }
-        
+
         # Model
         if (isset($m['Model']))
         {
             $metas['Model'][1] = html::escapeHTML($m['Model']);
         }
-        
+
         # Lens
         if (isset($m['Lens']))
         {
             $metas['Lens'][1] = html::escapeHTML($m['Lens']);
         }
-        
+
         # ExposureProgram
         if (isset($m['ExposureProgram']))
         {
             $metas['ExposureProgram'][1] = isset($exp_prog[$m['ExposureProgram']]) ?
             $exp_prog[$m['ExposureProgram']] : $m['ExposureProgram'];
         }
-        
+
         # Exposure
         if (!empty($m['Exposure']))
         {
             $metas['Exposure'][1] = $m['Exposure'] . 's';
         }
-        
+
         # FNumber
         if (!empty($m['FNumber']))
         {
             $ap = sscanf($m['FNumber'], '%d/%d');
             $metas['FNumber'][1] = $ap ? 'f/' . ( $ap[0] / $ap[1]) : $m['FNumber'];
         }
-        
+
         # ISOSpeedRatings
         if (!empty($m['ISOSpeedRatings']))
         {
             $metas['ISOSpeedRatings'][1] = $m['ISOSpeedRatings'];
         }
-        
+
         # FocalLength
         if (!empty($m['FocalLength']))
         {
             $fl = sscanf($m['FocalLength'], '%d/%d');
             $metas['FocalLength'][1] = $fl ? $fl[0]/$fl[1] . 'mm' : $m['FocalLength'];
         }
-        
+
         # ExposureBiasValue
         if (isset($m['ExposureBiasValue']))
         {
             $metas['ExposureBiasValue'][1] = $m['ExposureBiasValue'];
         }
-        
+
         # MeteringMode
         if (isset($m['MeteringMode']))
         {
             $metas['MeteringMode'][1] = isset($met_mod[$m['MeteringMode']]) ?
             $exp_prog[$m['MeteringMode']] : $m['MeteringMode'];
         }
-        
+
         return $metas;
     }
 }

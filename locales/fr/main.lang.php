@@ -151,5 +151,3 @@ $GLOBALS['__l10n']['Pattern'] = 'Multizone';
 
 #_widgets.php:400
 $GLOBALS['__l10n']['Partial'] = 'Partielle';
-
-?>
