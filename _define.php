@@ -18,13 +18,13 @@ $this->registerModule(
     'Entry Photo Exif Widget',
     'Show images exif of an entry',
     'Jean-Christian Denis and contibutors',
-    '1.0.4',
+    '1.1',
     [
-        'requires'    => [['core', '2.19']],
-        'permissions' => 'admin',
+        'requires'    => [['core', '2.24']],
+        'permissions' => dcAuth::PERMISSION_ADMIN,
         'type'        => 'plugin',
         'support'     => 'https://github.com/JcDenis/entryPhotoExifWidget',
         'details'     => 'https://plugins.dotaddict.org/dc2/details/entryPhotoExifWidget',
-        'repository'  => 'https://raw.githubusercontent.com/JcDenis/entryPhotoExifWidget/master/dcstore.xml'
+        'repository'  => 'https://raw.githubusercontent.com/JcDenis/entryPhotoExifWidget/master/dcstore.xml',
     ]
 );

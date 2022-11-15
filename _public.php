@@ -14,4 +14,4 @@ if (!defined('DC_RC_PATH')) {
     return null;
 }
 
-require_once dirname(__FILE__) . '/_widgets.php';
+require_once __DIR__ . '/_widgets.php';

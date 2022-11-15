@@ -14,7 +14,7 @@ if (!defined('DC_RC_PATH')) {
     return null;
 }
 
-$core->addBehavior('initWidgets', ['entryPhotoExifWidget', 'setWidget']);
+dcCore::app()->addBehavior('initWidgets', ['entryPhotoExifWidget', 'setWidget']);
 
 class entryPhotoExifWidget
 {
@@ -25,10 +25,8 @@ class entryPhotoExifWidget
 
     public static function setWidget($w)
     {
-        global $core;
-
         $categories_combo = ['-' => '', __('Uncategorized') => 'null'];
-        $categories       = $core->blog->getCategories();
+        $categories       = dcCore::app()->blog->getCategories();
         while ($categories->fetch()) {
             $cat_title                    = html::escapeHTML($categories->cat_title);
             $categories_combo[$cat_title] = $categories->cat_id;
@@ -39,7 +37,7 @@ class entryPhotoExifWidget
             __('square')    => 'sq',
             __('thumbnail') => 't',
             __('small')     => 's',
-            __('medium')    => 'm'
+            __('medium')    => 'm',
         ];
 
         $w->create(
@@ -181,34 +179,32 @@ class entryPhotoExifWidget
 
     public static function getWidget($w)
     {
-        global $core, $_ctx;
-
         # Widget is offline
         if ($w->offline) {
             return null;
         }
 
         # Not in post context
-        if (!$_ctx->exists('posts') || !$_ctx->posts->post_id) {
+        if (!dcCore::app()->ctx->exists('posts') || !dcCore::app()->ctx->posts->post_id) {
             return null;
         }
 
         # Not supported post type
-        if (!in_array($_ctx->posts->post_type, self::$supported_post_type)) {
+        if (!in_array(dcCore::app()->ctx->posts->post_type, self::$supported_post_type)) {
             return null;
         }
 
         # Category limit
-        if ($w->category == 'null' && $_ctx->posts->cat_id !== null
-         || $w->category != 'null' && $w->category != '' && $w->category != $_ctx->posts->cat_id) {
+        if ($w->category == 'null' && dcCore::app()->ctx->posts->cat_id !== null
+         || $w->category != 'null' && $w->category != '' && $w->category != dcCore::app()->ctx->posts->cat_id) {
             return null;
         }
 
         # Content lookup
-        $text = $_ctx->posts->post_excerpt_xhtml . $_ctx->posts->post_content_xhtml;
+        $text = dcCore::app()->ctx->posts->post_excerpt_xhtml . dcCore::app()->ctx->posts->post_content_xhtml;
 
         # Find source images
-        $images = self::getImageSource($core, $text, $w->thumbsize);
+        $images = self::getImageSource($text, $w->thumbsize);
 
         # No images
         if (empty($images)) {
@@ -220,7 +216,7 @@ class entryPhotoExifWidget
         # Loop through images
         foreach ($images as $img) {
             # List metas
-            $metas = self::getImageMeta($core, $img['source']);
+            $metas = self::getImageMeta($img['source']);
 
             $content = '';
             foreach ($metas as $k => $v) {
@@ -259,12 +255,12 @@ class entryPhotoExifWidget
         );
     }
 
-    public static function getImageSource($core, $subject, $size = '')
+    public static function getImageSource($subject, $size = '')
     {
         # Path and url
-        $p_url  = $core->blog->settings->system->public_url;
-        $p_site = preg_replace('#^(.+?//.+?)/(.*)$#', '$1', $core->blog->url);
-        $p_root = $core->blog->public_path;
+        $p_url  = dcCore::app()->blog->settings->system->public_url;
+        $p_site = preg_replace('#^(.+?//.+?)/(.*)$#', '$1', dcCore::app()->blog->url);
+        $p_root = dcCore::app()->blog->public_path;
 
         # Image pattern
         $pattern = '(?:' . preg_quote($p_site, '/') . ')?' . preg_quote($p_url, '/');
@@ -275,12 +271,12 @@ class entryPhotoExifWidget
             return;
         }
 
-        $res         = $duplicate         = [];
+        $res         = $duplicate = [];
         $allowed_ext = ['.jpg', '.JPG', '.jpeg', '.JPEG', '.png', '.PNG', '.gif', '.GIF'];
 
         # Loop through images
         foreach ($m[1] as $i => $img) {
-            $src  = $thb  = $alt  = false;
+            $src  = $thb = $alt = false;
             $info = path::info($img);
             $base = $info['base'];
             $ext  = $info['extension'];
@@ -326,14 +322,14 @@ class entryPhotoExifWidget
             $res[] = [
                 'source' => $src,
                 'thumb'  => $thb,
-                'title'  => $alt
+                'title'  => $alt,
             ];
         }
 
         return $res;
     }
 
-    public static function getImageMeta($core, $src)
+    public static function getImageMeta($src)
     {
         $metas = [
             'Title'             => [__('Title:'), ''],
@@ -349,7 +345,7 @@ class entryPhotoExifWidget
             'ISOSpeedRatings'   => [__('ISO:'), ''],
             'FocalLength'       => [__('Focal:'), ''],
             'ExposureBiasValue' => [__('Exposure Bias:'), ''],
-            'MeteringMode'      => [__('Metering mode:'), '']
+            'MeteringMode'      => [__('Metering mode:'), ''],
         ];
 
         $exp_prog = [
@@ -361,7 +357,7 @@ class entryPhotoExifWidget
             5 => __('Creative program'),
             6 => __('Action program'),
             7 => __('Portait mode'),
-            8 => __('Landscape mode')
+            8 => __('Landscape mode'),
         ];
 
         $met_mod = [
@@ -372,7 +368,7 @@ class entryPhotoExifWidget
             4 => __('Multi spot'),
             5 => __('Pattern'),
             6 => __('Partial'),
-            7 => __('Other')
+            7 => __('Other'),
         ];
 
         if (!$src || !file_exists($src)) {
@@ -389,7 +385,7 @@ class entryPhotoExifWidget
         # Description
         if (!empty($m['Description'])) {
             if (!empty($m['Title']) && $m['Title'] != $m['Description']) {
-                $metas['Description'][1] = html::escpeHTML($m['Description']);
+                $metas['Description'][1] = html::escapeHTML($m['Description']);
             }
         }
 
@@ -406,8 +402,8 @@ class entryPhotoExifWidget
 
         # DateTimeOriginal
         if (!empty($m['DateTimeOriginal'])) {
-            $dt_ft                        = $core->blog->settings->system->date_format . ', ' . $core->blog->settings->system->time_format;
-            $dt_tz                        = $core->blog->settings->system->blog_timezone;
+            $dt_ft                        = dcCore::app()->blog->settings->system->date_format . ', ' . dcCore::app()->blog->settings->system->time_format;
+            $dt_tz                        = dcCore::app()->blog->settings->system->blog_timezone;
             $metas['DateTimeOriginal'][1] = dt::dt2str($dt_ft, $m['DateTimeOriginal'], $dt_tz);
         }
 
