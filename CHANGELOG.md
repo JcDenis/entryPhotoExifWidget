@@ -1,5 +1,8 @@
 dev
-- fix PSR CS
+
+1.1 - 2022.11.20
+- fix compatibility with Dotclear 2.24 (required)
+- fix PSR and CS
 - remove .lang.php file
 - update readme file
 
