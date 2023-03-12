@@ -1,4 +1,6 @@
-dev
+1.2 - 2023.03.12
+- update to Dotclear 2.25
+- use namespace
 
 1.1 - 2022.11.20
 - fix compatibility with Dotclear 2.24 (required)
