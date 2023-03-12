@@ -10,8 +10,30 @@
  * @copyright Jean-Christian Denis
  * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
-if (!defined('DC_CONTEXT_ADMIN')) {
-    return null;
-}
+declare(strict_types=1);
 
-require_once __DIR__ . '/_widgets.php';
+namespace Dotclear\Plugin\entryPhotoExifWidget;
+
+use dcCore;
+use dcNsProcess;
+
+class Backend extends dcNsProcess
+{
+    public static function init(): bool
+    {
+        self::$init = defined('DC_CONTEXT_ADMIN');
+
+        return self::$init;
+    }
+
+    public static function process(): bool
+    {
+        if (!self::$init) {
+            return false;
+        }
+
+        dcCore::app()->addBehavior('initWidgets', [Widgets::class, 'initWidgets']);
+
+        return true;
+    }
+}

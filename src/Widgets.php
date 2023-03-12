@@ -10,20 +10,26 @@
  * @copyright Jean-Christian Denis
  * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
  */
-if (!defined('DC_RC_PATH')) {
-    return null;
-}
+declare(strict_types=1);
 
-dcCore::app()->addBehavior('initWidgets', ['entryPhotoExifWidget', 'setWidget']);
+namespace Dotclear\Plugin\entryPhotoExifWidget;
 
-class entryPhotoExifWidget
+use dcCore;
+use Dotclear\Plugin\widgets\WidgetsElement;
+use Dotclear\Plugin\widgets\WidgetsStack;
+use dt;
+use html;
+use imageMeta;
+use path;
+
+class Widgets
 {
     public static $supported_post_type = ['post', 'page', 'gal', 'galitem'];
     public static $widget_content      = '<ul>%s</ul>';
     public static $widget_text         = '<li class="epew-%s"><strong>%s</strong> %s</li>';
     public static $widget_thumb        = '<li><img class="img-thumbnail" alt="%s" src="%s" /></li>';
 
-    public static function setWidget($w)
+    public static function initWidgets(WidgetsStack $w): void
     {
         $categories_combo = ['-' => '', __('Uncategorized') => 'null'];
         $categories       = dcCore::app()->blog->getCategories();
@@ -42,162 +48,142 @@ class entryPhotoExifWidget
 
         $w->create(
             'epew',
-            __('Entry Photo Exif'),
-            ['entryPhotoExifWidget', 'getWidget'],
+            __('Entry Photo EXIF'),
+            [Widgets::class, 'renderWidget'],
             null,
             __('Show images exif of an entry')
-        );
-
-        $w->epew->setting(
-            'title',
-            __('Title:'),
-            __('Photos EXIF'),
-            'text'
-        );
-        $w->epew->setting(
+        )
+        ->addTitle(__('Photos EXIF'))
+        ->setting(
             'showmeta_Title',
             sprintf(__('Show metadata: %s'), __('Title')),
             0,
             'check'
-        );
-        $w->epew->setting(
+        )
+        ->setting(
             'showmeta_Description',
             sprintf(__('Show metadata: %s'), __('Descritpion')),
             0,
             'check'
-        );
-        $w->epew->setting(
+        )
+        ->setting(
             'showmeta_Location',
             sprintf(__('Show metadata: %s'), __('Location')),
             0,
             'check'
-        );
-        $w->epew->setting(
+        )
+        ->setting(
             'showmeta_DateTimeOriginal',
             sprintf(__('Show metadata: %s'), __('Date')),
             0,
             'check'
-        );
-        $w->epew->setting(
+        )
+        ->setting(
             'showmeta_Make',
             sprintf(__('Show metadata: %s'), __('Manufacturer')),
             0,
             'check'
-        );
-        $w->epew->setting(
+        )
+        ->setting(
             'showmeta_Model',
             sprintf(__('Show metadata: %s'), __('Model')),
             1,
             'check'
-        );
-        $w->epew->setting(
+        )
+        ->setting(
             'showmeta_Lens',
             sprintf(__('Show metadata: %s'), __('Lens')),
             1,
             'check'
-        );
-        $w->epew->setting(
+        )
+        ->setting(
             'showmeta_ExposureProgram',
             sprintf(__('Show metadata: %s'), __('Exposure program')),
             0,
             'check'
-        );
-        $w->epew->setting(
+        )
+        ->setting(
             'showmeta_Exposure',
             sprintf(__('Show metadata: %s'), __('Exposure time')),
             1,
             'check'
-        );
-        $w->epew->setting(
+        )
+        ->setting(
             'showmeta_FNumber',
             sprintf(__('Show metadata: %s'), __('Aperture')),
             1,
             'check'
-        );
-        $w->epew->setting(
+        )
+        ->setting(
             'showmeta_ISOSpeedRatings',
             sprintf(__('Show metadata: %s'), __('Iso speed rating')),
             1,
             'check'
-        );
-        $w->epew->setting(
+        )
+        ->setting(
             'showmeta_FocalLength',
             sprintf(__('Show metadata: %s'), __('Focal lengh')),
             1,
             'check'
-        );
-        $w->epew->setting(
+        )
+        ->setting(
             'showmeta_ExposureBiasValue',
             sprintf(__('Show metadata: %s'), __('Exposure bias value')),
             0,
             'check'
-        );
-        $w->epew->setting(
+        )
+        ->setting(
             'showmeta_MeteringMode',
             sprintf(__('Show metadata: %s'), __('Metering mode')),
             0,
             'check'
-        );
-        $w->epew->setting(
+        )
+        ->setting(
             'showmeta',
             __('Show empty metadata'),
             0,
             'check'
-        );
-        $w->epew->setting(
+        )
+        ->setting(
             'category',
             __('Category limit:'),
             '',
             'combo',
             $categories_combo
-        );
-        $w->epew->setting(
+        )
+        ->setting(
             'thumbsize',
             __('Thumbnail size:'),
             't',
             'combo',
             $thumbnail_combo
-        );
-        $w->epew->setting(
-            'content_only',
-            __('Content only'),
-            0,
-            'check'
-        );
-        $w->epew->setting(
-            'class',
-            __('CSS class:'),
-            ''
-        );
-        $w->epew->setting(
-            'offline',
-            __('Offline'),
-            0,
-            'check'
-        );
+        )
+        ->addContentOnly()
+        ->addClass()
+        ->addOffline();
     }
 
-    public static function getWidget($w)
+    public static function renderWidget(WidgetsElement $w): string
     {
         # Widget is offline
         if ($w->offline) {
-            return null;
+            return '';
         }
 
         # Not in post context
         if (!dcCore::app()->ctx->exists('posts') || !dcCore::app()->ctx->posts->post_id) {
-            return null;
+            return '';
         }
 
         # Not supported post type
         if (!in_array(dcCore::app()->ctx->posts->post_type, self::$supported_post_type)) {
-            return null;
+            return '';
         }
 
         # Category limit
         if ($w->category == 'null' && dcCore::app()->ctx->posts->cat_id !== null
          || $w->category != 'null' && $w->category != '' && $w->category != dcCore::app()->ctx->posts->cat_id) {
-            return null;
+            return '';
         }
 
         # Content lookup
@@ -208,7 +194,7 @@ class entryPhotoExifWidget
 
         # No images
         if (empty($images)) {
-            return null;
+            return '';
         }
 
         $contents = '';
@@ -229,7 +215,7 @@ class entryPhotoExifWidget
 
             # No meta
             if (empty($content)) {
-                return null;
+                return '';
             }
 
             # Thumbnail
@@ -242,12 +228,12 @@ class entryPhotoExifWidget
 
         # Nothing found
         if (empty($contents)) {
-            return null;
+            return '';
         }
 
         # Paste widget
         return $w->renderDiv(
-            $w->content_only,
+            (bool) $w->content_only,
             'photoExifWidget ' . $w->class,
             '',
             ($w->title ? $w->renderTitle(html::escapeHTML($w->title)) : '') .
