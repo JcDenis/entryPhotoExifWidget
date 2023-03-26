@@ -15,12 +15,12 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\entryPhotoExifWidget;
 
 use dcCore;
+use Dotclear\Helper\File\Path;
+use Dotclear\Helper\Html\Html;
 use Dotclear\Plugin\widgets\WidgetsElement;
 use Dotclear\Plugin\widgets\WidgetsStack;
 use dt;
-use html;
 use imageMeta;
-use path;
 
 class Widgets
 {
@@ -34,7 +34,7 @@ class Widgets
         $categories_combo = ['-' => '', __('Uncategorized') => 'null'];
         $categories       = dcCore::app()->blog->getCategories();
         while ($categories->fetch()) {
-            $cat_title                    = html::escapeHTML($categories->cat_title);
+            $cat_title                    = Html::escapeHTML($categories->cat_title);
             $categories_combo[$cat_title] = $categories->cat_id;
         }
 
@@ -236,7 +236,7 @@ class Widgets
             (bool) $w->content_only,
             'photoExifWidget ' . $w->class,
             '',
-            ($w->title ? $w->renderTitle(html::escapeHTML($w->title)) : '') .
+            ($w->title ? $w->renderTitle(Html::escapeHTML($w->title)) : '') .
             sprintf(self::$widget_content, $contents)
         );
     }
@@ -263,7 +263,7 @@ class Widgets
         # Loop through images
         foreach ($m[1] as $i => $img) {
             $src  = $thb = $alt = false;
-            $info = path::info($img);
+            $info = Path::info($img);
             $base = $info['base'];
             $ext  = $info['extension'];
 
@@ -365,25 +365,25 @@ class Widgets
 
         # Title
         if (!empty($m['Title'])) {
-            $metas['Title'][1] = html::escapeHTML($m['Title']);
+            $metas['Title'][1] = Html::escapeHTML($m['Title']);
         }
 
         # Description
         if (!empty($m['Description'])) {
             if (!empty($m['Title']) && $m['Title'] != $m['Description']) {
-                $metas['Description'][1] = html::escapeHTML($m['Description']);
+                $metas['Description'][1] = Html::escapeHTML($m['Description']);
             }
         }
 
         # Location
         if (!empty($m['City'])) {
-            $metas['Location'][1] .= html::escapeHTML($m['City']);
+            $metas['Location'][1] .= Html::escapeHTML($m['City']);
         }
         if (!empty($m['City']) && !empty($m['country'])) {
             $metas['Location'][1] .= ', ';
         }
         if (!empty($m['country'])) {
-            $metas['Location'][1] .= html::escapeHTML($m['Country']);
+            $metas['Location'][1] .= Html::escapeHTML($m['Country']);
         }
 
         # DateTimeOriginal
@@ -395,17 +395,17 @@ class Widgets
 
         # Make
         if (isset($m['Make'])) {
-            $metas['Make'][1] = html::escapeHTML($m['Make']);
+            $metas['Make'][1] = Html::escapeHTML($m['Make']);
         }
 
         # Model
         if (isset($m['Model'])) {
-            $metas['Model'][1] = html::escapeHTML($m['Model']);
+            $metas['Model'][1] = Html::escapeHTML($m['Model']);
         }
 
         # Lens
         if (isset($m['Lens'])) {
-            $metas['Lens'][1] = html::escapeHTML($m['Lens']);
+            $metas['Lens'][1] = Html::escapeHTML($m['Lens']);
         }
 
         # ExposureProgram
