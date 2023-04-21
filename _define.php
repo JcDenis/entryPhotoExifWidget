@@ -18,9 +18,9 @@ $this->registerModule(
     'Entry Photo EXIF Widget',
     'Show images EXIF of an entry',
     'Jean-Christian Denis and contibutors',
-    '1.2',
+    '1.3',
     [
-        'requires'    => [['core', '2.25']],
+        'requires'    => [['core', '2.26']],
         'permissions' => dcCore::app()->auth->makePermissions([
             dcAuth::PERMISSION_ADMIN,
         ]),

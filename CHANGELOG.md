@@ -1,3 +1,9 @@
+1.3 - 2023.04.22
+- require dotclear 2.26
+- use latest dotclear namespace helper
+- fix nullsafe warning
+- fix static call on frontend and backend class
+
 1.2 - 2023.03.12
 - update to Dotclear 2.25
 - use namespace
