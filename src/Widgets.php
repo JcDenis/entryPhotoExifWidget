@@ -15,27 +15,30 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\entryPhotoExifWidget;
 
 use dcCore;
+use Dotclear\Helper\Date;
+use Dotclear\Helper\File\Image\ImageMeta;
 use Dotclear\Helper\File\Path;
 use Dotclear\Helper\Html\Html;
 use Dotclear\Plugin\widgets\WidgetsElement;
 use Dotclear\Plugin\widgets\WidgetsStack;
-use dt;
-use imageMeta;
 
 class Widgets
 {
-    public static $supported_post_type = ['post', 'page', 'gal', 'galitem'];
-    public static $widget_content      = '<ul>%s</ul>';
-    public static $widget_text         = '<li class="epew-%s"><strong>%s</strong> %s</li>';
-    public static $widget_thumb        = '<li><img class="img-thumbnail" alt="%s" src="%s" /></li>';
+    public static array $supported_post_type = ['post', 'page', 'gal', 'galitem'];
+    public static string $widget_content     = '<ul>%s</ul>';
+    public static string $widget_text        = '<li class="epew-%s"><strong>%s</strong> %s</li>';
+    public static string $widget_thumb       = '<li><img class="img-thumbnail" alt="%s" src="%s" /></li>';
 
     public static function initWidgets(WidgetsStack $w): void
     {
+        if (is_null(dcCore::app()->blog)) {
+            return;
+        }
+
         $categories_combo = ['-' => '', __('Uncategorized') => 'null'];
         $categories       = dcCore::app()->blog->getCategories();
         while ($categories->fetch()) {
-            $cat_title                    = Html::escapeHTML($categories->cat_title);
-            $categories_combo[$cat_title] = $categories->cat_id;
+            $categories_combo[Html::escapeHTML($categories->f('cat_title'))] = $categories->f('cat_id');
         }
 
         $thumbnail_combo = [
@@ -165,29 +168,34 @@ class Widgets
 
     public static function renderWidget(WidgetsElement $w): string
     {
-        # Widget is offline
+        // Widget is offline
         if ($w->offline) {
             return '';
         }
 
-        # Not in post context
-        if (!dcCore::app()->ctx->exists('posts') || !dcCore::app()->ctx->posts->post_id) {
+        // nullsafe
+        if (is_null(dcCore::app()->blog) || is_null(dcCore::app()->ctx)) {
             return '';
         }
 
-        # Not supported post type
-        if (!in_array(dcCore::app()->ctx->posts->post_type, self::$supported_post_type)) {
+        // Not in post context
+        if (!dcCore::app()->ctx->exists('posts') || !dcCore::app()->ctx->__get('posts')->f('post_id')) {
             return '';
         }
 
-        # Category limit
-        if ($w->category == 'null' && dcCore::app()->ctx->posts->cat_id !== null
-         || $w->category != 'null' && $w->category != '' && $w->category != dcCore::app()->ctx->posts->cat_id) {
+        // Not supported post type
+        if (!in_array(dcCore::app()->ctx->__get('posts')->f('post_type'), self::$supported_post_type)) {
+            return '';
+        }
+
+        // Category limit
+        if ($w->category == 'null' && dcCore::app()->ctx->__get('posts')->f('cat_id') !== null
+         || $w->category != 'null' && $w->category != '' && $w->category != dcCore::app()->ctx->__get('posts')->f('cat_id')) {
             return '';
         }
 
         # Content lookup
-        $text = dcCore::app()->ctx->posts->post_excerpt_xhtml . dcCore::app()->ctx->posts->post_content_xhtml;
+        $text = dcCore::app()->ctx->__get('posts')->f('post_excerpt_xhtml') . dcCore::app()->ctx->__get('posts')->f('post_content_xhtml');
 
         # Find source images
         $images = self::getImageSource($text, $w->thumbsize);
@@ -226,11 +234,6 @@ class Widgets
             $contents .= $content;
         }
 
-        # Nothing found
-        if (empty($contents)) {
-            return '';
-        }
-
         # Paste widget
         return $w->renderDiv(
             (bool) $w->content_only,
@@ -241,11 +244,15 @@ class Widgets
         );
     }
 
-    public static function getImageSource($subject, $size = '')
+    public static function getImageSource(string $subject, string $size = ''): array
     {
+        if (is_null(dcCore::app()->blog)) {
+            return [];
+        }
+
         # Path and url
-        $p_url  = dcCore::app()->blog->settings->system->public_url;
-        $p_site = preg_replace('#^(.+?//.+?)/(.*)$#', '$1', dcCore::app()->blog->url);
+        $p_url  = (string) dcCore::app()->blog->settings->get('system')->get('public_url');
+        $p_site = (string) preg_replace('#^(.+?//.+?)/(.*)$#', '$1', dcCore::app()->blog->url);
         $p_root = dcCore::app()->blog->public_path;
 
         # Image pattern
@@ -254,7 +261,7 @@ class Widgets
 
         # No image
         if (!preg_match_all($pattern, $subject, $m)) {
-            return;
+            return [];
         }
 
         $res         = $duplicate = [];
@@ -315,8 +322,12 @@ class Widgets
         return $res;
     }
 
-    public static function getImageMeta($src)
+    public static function getImageMeta(?string $src): array
     {
+        if (is_null(dcCore::app()->blog)) {
+            return [];
+        }
+
         $metas = [
             'Title'             => [__('Title:'), ''],
             'Description'       => [__('Description:'), ''],
@@ -361,7 +372,7 @@ class Widgets
             return $metas;
         }
 
-        $m = imageMeta::readMeta($src);
+        $m = ImageMeta::readMeta($src);
 
         # Title
         if (!empty($m['Title'])) {
@@ -388,9 +399,9 @@ class Widgets
 
         # DateTimeOriginal
         if (!empty($m['DateTimeOriginal'])) {
-            $dt_ft                        = dcCore::app()->blog->settings->system->date_format . ', ' . dcCore::app()->blog->settings->system->time_format;
-            $dt_tz                        = dcCore::app()->blog->settings->system->blog_timezone;
-            $metas['DateTimeOriginal'][1] = dt::dt2str($dt_ft, $m['DateTimeOriginal'], $dt_tz);
+            $dt_ft                        = dcCore::app()->blog->settings->get('system')->get('date_format') . ', ' . dcCore::app()->blog->settings->get('system')->get('time_format');
+            $dt_tz                        = dcCore::app()->blog->settings->get('system')->get('blog_timezone');
+            $metas['DateTimeOriginal'][1] = Date::dt2str($dt_ft, $m['DateTimeOriginal'], $dt_tz);
         }
 
         # Make
