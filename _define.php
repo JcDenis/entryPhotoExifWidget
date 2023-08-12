@@ -18,15 +18,15 @@ $this->registerModule(
     'Entry Photo EXIF Widget',
     'Show images EXIF of an entry',
     'Jean-Christian Denis and contibutors',
-    '1.3',
+    '1.4',
     [
-        'requires'    => [['core', '2.26']],
+        'requires'    => [['core', '2.27']],
         'permissions' => dcCore::app()->auth->makePermissions([
             dcAuth::PERMISSION_ADMIN,
         ]),
         'type'       => 'plugin',
-        'support'    => 'https://github.com/JcDenis/' . basename(__DIR__),
-        'details'    => 'https://plugins.dotaddict.org/dc2/details/' . basename(__DIR__),
-        'repository' => 'https://raw.githubusercontent.com/JcDenis/' . basename(__DIR__) . '/master/dcstore.xml',
+        'support'    => 'https://git.dotclear.watch/JcDenis/' . basename(__DIR__) . '/issues',
+        'details'    => 'https://git.dotclear.watch/JcDenis/' . basename(__DIR__) . '/src/branch/master/README.md',
+        'repository' => 'https://git.dotclear.watch/JcDenis/' . basename(__DIR__) . '/raw/branch/master/dcstore.xml',
     ]
 );
