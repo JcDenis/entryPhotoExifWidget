@@ -1,20 +1,10 @@
 <?php
-/**
- * @brief entryPhotoExifWidget, a plugin for Dotclear 2
- *
- * @package Dotclear
- * @subpackage Plugin
- *
- * @author Jean-Christian Denis and contibutors
- *
- * @copyright Jean-Christian Denis
- * @copyright GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
- */
+
 declare(strict_types=1);
 
 namespace Dotclear\Plugin\entryPhotoExifWidget;
 
-use dcCore;
+use Dotclear\App;
 use Dotclear\Helper\Date;
 use Dotclear\Helper\File\Image\ImageMeta;
 use Dotclear\Helper\File\Path;
@@ -22,6 +12,13 @@ use Dotclear\Helper\Html\Html;
 use Dotclear\Plugin\widgets\WidgetsElement;
 use Dotclear\Plugin\widgets\WidgetsStack;
 
+/**
+ * @brief   entryPhotoExifWidget widgets class.
+ * @ingroup entryPhotoExifWidget
+ *
+ * @author      Jean-Christian Denis
+ * @copyright   GPL-2.0 https://www.gnu.org/licenses/gpl-2.0.html
+ */
 class Widgets
 {
     public static array $supported_post_type = ['post', 'page', 'gal', 'galitem'];
@@ -31,12 +28,12 @@ class Widgets
 
     public static function initWidgets(WidgetsStack $w): void
     {
-        if (is_null(dcCore::app()->blog)) {
+        if (!App::blog()->isDefined()) {
             return;
         }
 
         $categories_combo = ['-' => '', __('Uncategorized') => 'null'];
-        $categories       = dcCore::app()->blog->getCategories();
+        $categories       = App::blog()->getCategories();
         while ($categories->fetch()) {
             $categories_combo[Html::escapeHTML($categories->f('cat_title'))] = $categories->f('cat_id');
         }
@@ -52,7 +49,7 @@ class Widgets
         $w->create(
             'epew',
             __('Entry Photo EXIF'),
-            [Widgets::class, 'renderWidget'],
+            self::renderWidget(...),
             null,
             __('Show images exif of an entry')
         )
@@ -169,33 +166,30 @@ class Widgets
     public static function renderWidget(WidgetsElement $w): string
     {
         // Widget is offline
-        if ($w->offline) {
+        if ($w->offline || !App::blog()->isDefined()) {
             return '';
         }
 
-        // nullsafe
-        if (is_null(dcCore::app()->blog) || is_null(dcCore::app()->ctx)) {
-            return '';
-        }
+        $ctx = App::frontend()->context();
 
         // Not in post context
-        if (!dcCore::app()->ctx->exists('posts') || !dcCore::app()->ctx->__get('posts')->f('post_id')) {
+        if (!$ctx->exists('posts') || !$ctx->__get('posts')->f('post_id')) {
             return '';
         }
 
         // Not supported post type
-        if (!in_array(dcCore::app()->ctx->__get('posts')->f('post_type'), self::$supported_post_type)) {
+        if (!in_array($ctx->__get('posts')->f('post_type'), self::$supported_post_type)) {
             return '';
         }
 
         // Category limit
-        if ($w->category == 'null' && dcCore::app()->ctx->__get('posts')->f('cat_id') !== null
-         || $w->category != 'null' && $w->category != '' && $w->category != dcCore::app()->ctx->__get('posts')->f('cat_id')) {
+        if ($w->category == 'null' && $ctx->__get('posts')->f('cat_id') !== null
+         || $w->category != 'null' && $w->category != '' && $w->category != $ctx->__get('posts')->f('cat_id')) {
             return '';
         }
 
         # Content lookup
-        $text = dcCore::app()->ctx->__get('posts')->f('post_excerpt_xhtml') . dcCore::app()->ctx->__get('posts')->f('post_content_xhtml');
+        $text = $ctx->__get('posts')->f('post_excerpt_xhtml') . $ctx->__get('posts')->f('post_content_xhtml');
 
         # Find source images
         $images = self::getImageSource($text, $w->thumbsize);
@@ -246,14 +240,14 @@ class Widgets
 
     public static function getImageSource(string $subject, string $size = ''): array
     {
-        if (is_null(dcCore::app()->blog)) {
+        if (!App::blog()->isDefined()) {
             return [];
         }
 
         # Path and url
-        $p_url  = (string) dcCore::app()->blog->settings->get('system')->get('public_url');
-        $p_site = (string) preg_replace('#^(.+?//.+?)/(.*)$#', '$1', dcCore::app()->blog->url);
-        $p_root = dcCore::app()->blog->public_path;
+        $p_url  = (string) App::blog()->settings()->get('system')->get('public_url');
+        $p_site = (string) preg_replace('#^(.+?//.+?)/(.*)$#', '$1', App::blog()->url());
+        $p_root = App::blog()->publicPath();
 
         # Image pattern
         $pattern = '(?:' . preg_quote($p_site, '/') . ')?' . preg_quote($p_url, '/');
@@ -324,7 +318,7 @@ class Widgets
 
     public static function getImageMeta(?string $src): array
     {
-        if (is_null(dcCore::app()->blog)) {
+        if (!App::blog()->isDefined()) {
             return [];
         }
 
@@ -399,8 +393,8 @@ class Widgets
 
         # DateTimeOriginal
         if (!empty($m['DateTimeOriginal'])) {
-            $dt_ft                        = dcCore::app()->blog->settings->get('system')->get('date_format') . ', ' . dcCore::app()->blog->settings->get('system')->get('time_format');
-            $dt_tz                        = dcCore::app()->blog->settings->get('system')->get('blog_timezone');
+            $dt_ft                        = App::blog()->settings()->get('system')->get('date_format') . ', ' . App::blog()->settings()->get('system')->get('time_format');
+            $dt_tz                        = App::blog()->settings()->get('system')->get('blog_timezone');
             $metas['DateTimeOriginal'][1] = Date::dt2str($dt_ft, $m['DateTimeOriginal'], $dt_tz);
         }
 
