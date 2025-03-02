@@ -17,7 +17,7 @@ $this->registerModule(
     'Entry Photo EXIF Widget',
     'Show images EXIF of an entry',
     'Jean-Christian Denis and contibutors',
-    '1.5',
+    '1.5.1',
     [
         'requires'    => [['core', '2.28']],
         'permissions' => 'My',
