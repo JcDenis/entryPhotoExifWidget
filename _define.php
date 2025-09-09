@@ -17,9 +17,9 @@ $this->registerModule(
     'Entry Photo EXIF Widget',
     'Show images EXIF of an entry',
     'Jean-Christian Denis and contibutors',
-    '1.5.1',
+    '1.6',
     [
-        'requires'    => [['core', '2.28']],
+        'requires'    => [['core', '2.36']],
         'permissions' => 'My',
         'type'        => 'plugin',
         'support'     => 'https://github.com/JcDenis/' . $this->id . '/issues',

@@ -1,3 +1,8 @@
+entryPhotoExifWidget 1.6 - 2025.09.09
+===========================================================
+* Bump Dotclear from 2.28 to 2.36
+* Use TraitProcess
+
 entryPhotoExifWidget 1.5.1 - 2025.03.02
 ===========================================================
 * Require Dotclear 2.28
