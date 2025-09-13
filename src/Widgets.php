@@ -21,6 +21,9 @@ use Dotclear\Plugin\widgets\WidgetsStack;
  */
 class Widgets
 {
+    /**
+     * @var     string[]    $supported_post_type
+     */
     public static array $supported_post_type = ['post', 'page', 'gal', 'galitem'];
     public static string $widget_content     = '<ul>%s</ul>';
     public static string $widget_text        = '<li class="epew-%s"><strong>%s</strong> %s</li>';
@@ -166,7 +169,7 @@ class Widgets
     public static function renderWidget(WidgetsElement $w): string
     {
         // Widget is offline
-        if ($w->offline || !App::blog()->isDefined()) {
+        if ($w->get('offline') || !App::blog()->isDefined()) {
             return '';
         }
 
@@ -183,8 +186,8 @@ class Widgets
         }
 
         // Category limit
-        if ($w->category == 'null' && $ctx->__get('posts')->f('cat_id') !== null
-         || $w->category != 'null' && $w->category != '' && $w->category != $ctx->__get('posts')->f('cat_id')) {
+        if ($w->get('category') == 'null' && $ctx->__get('posts')->f('cat_id') !== null
+         || $w->get('category') != 'null' && $w->get('category') != '' && $w->get('category') != $ctx->__get('posts')->f('cat_id')) {
             return '';
         }
 
@@ -192,7 +195,7 @@ class Widgets
         $text = $ctx->__get('posts')->f('post_excerpt_xhtml') . $ctx->__get('posts')->f('post_content_xhtml');
 
         # Find source images
-        $images = self::getImageSource($text, $w->thumbsize);
+        $images = self::getImageSource($text, $w->get('thumbsize'));
 
         # No images
         if (empty($images)) {
@@ -209,7 +212,7 @@ class Widgets
             $content = '';
             foreach ($metas as $k => $v) {
                 # Don't show unwanted metadata or empty metadata
-                if (!$w->__get('showmeta_' . $k) || !$w->showmeta && empty($v[1])) {
+                if (!$w->get('showmeta_' . $k) || !$w->get('showmeta') && empty($v[1])) {
                     continue;
                 }
                 $content .= sprintf(self::$widget_text, $k, $v[0], $v[1]);
@@ -230,14 +233,17 @@ class Widgets
 
         # Paste widget
         return $w->renderDiv(
-            (bool) $w->content_only,
-            'photoExifWidget ' . $w->class,
+            (bool) $w->get('content_only'),
+            'photoExifWidget ' . $w->get('class'),
             '',
-            ($w->title ? $w->renderTitle(Html::escapeHTML($w->title)) : '') .
+            ($w->get('title') ? $w->renderTitle(Html::escapeHTML($w->get('title'))) : '') .
             sprintf(self::$widget_content, $contents)
         );
     }
 
+    /**
+     * @return  array<int, array<string, mixed>>
+     */
     public static function getImageSource(string $subject, string $size = ''): array
     {
         if (!App::blog()->isDefined()) {
@@ -316,6 +322,9 @@ class Widgets
         return $res;
     }
 
+    /**
+     * @return  array<string, array<int|string, string>>
+     */
     public static function getImageMeta(?string $src): array
     {
         if (!App::blog()->isDefined()) {
