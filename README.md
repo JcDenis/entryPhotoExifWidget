@@ -3,7 +3,7 @@
 [![Release](https://img.shields.io/github/v/release/jcdenis/entryPhotoExifWidget?color=lightblue)](https://github.com/JcDenis/entryPhotoExifWidget/releases)
 ![Date](https://img.shields.io/github/release-date/jcdenis/entryPhotoExifWidget?color=red)
 [![Dotclear](https://img.shields.io/badge/dotclear-v2.36-137bbb.svg)](https://fr.dotclear.org/download)
-[![Dotaddict](https://img.shields.io/badge/dotaddict-official-9ac123.svg)](https://plugins.dotaddict.org/dc2/details/entryPhotoExifWidget)
+[![Repository](https://img.shields.io/badge/repository-official-9ac123.svg)](https://dotclear.org/plugin/detail/entryPhotoExifWidget)
 [![License](https://img.shields.io/github/license/jcdenis/entryPhotoExifWidget?color=white)](https://github.com/JcDenis/entryPhotoExifWidget/blob/master/LICENSE)
 
 ## ABOUT
@@ -14,21 +14,21 @@ _entryPhotoExifWidget_ is a plugin for the open-source web publishing software c
 
 ## REQUIREMENTS
 
-* Dotclear 2.36
+* Dotclear 2.39
 * PHP 8.1+
 * permissions to manage widgets
 
 ## USAGE
 
 First install _entryPhotoExifWidget_, manualy from a zip package or from 
-Dotaddict repository. (See Dotclear's documentation to know how do this)
+Dotclear plugins repository. (See Dotclear's documentation to know how do this)
 
 Add and configure _Photo Exif Widget_ from widgets manager.
 
 ## LINKS
 
 * [License](https://github.com/JcDenis/entryPhotoExifWidget/blob/master/LICENSE)
-* [Packages & details](https://github.com/JcDenis/entryPhotoExifWidget/releases) (or on [Dotaddict](https://plugins.dotaddict.org/dc2/details/entryPhotoExifWidget))
+* [Packages & details](https://github.com/JcDenis/entryPhotoExifWidget/releases) (or on [Repository](https://dotclear.org/plugin/detail/entryPhotoExifWidget))
 * [Sources & contributions](https://github.com/JcDenis/entryPhotoExifWidget)
 * [Issues & security](https://github.com/JcDenis/entryPhotoExifWidget/issues)
 * [Discuss and help](https://forum.dotclear.org/viewtopic.php?id=48992)
