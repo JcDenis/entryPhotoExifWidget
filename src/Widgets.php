@@ -38,7 +38,7 @@ class Widgets
         $categories_combo = ['-' => '', __('Uncategorized') => 'null'];
         $categories       = App::blog()->getCategories();
         while ($categories->fetch()) {
-            $categories_combo[Html::escapeHTML($categories->f('cat_title'))] = $categories->f('cat_id');
+            $categories_combo[Html::escapeHTML($categories->strField('cat_title'))] = $categories->strField('cat_id');
         }
 
         $thumbnail_combo = [
@@ -176,12 +176,12 @@ class Widgets
         $ctx = App::frontend()->context();
 
         // Not in post context
-        if (!$ctx->exists('posts') || !$ctx->__get('posts')->f('post_id')) {
+        if (!$ctx->exists('posts') || !$ctx->__get('posts')->intField('post_id')) {
             return '';
         }
 
         // Not supported post type
-        if (!in_array($ctx->__get('posts')->f('post_type'), self::$supported_post_type)) {
+        if (!in_array($ctx->__get('posts')->strField('post_type'), self::$supported_post_type)) {
             return '';
         }
 
@@ -192,7 +192,7 @@ class Widgets
         }
 
         # Content lookup
-        $text = $ctx->__get('posts')->f('post_excerpt_xhtml') . $ctx->__get('posts')->f('post_content_xhtml');
+        $text = $ctx->__get('posts')->strField('post_excerpt_xhtml') . $ctx->__get('posts')->strField('post_content_xhtml');
 
         # Find source images
         $images = self::getImageSource($text, $w->get('thumbsize'));
