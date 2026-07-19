@@ -1,6 +1,7 @@
 entryPhotoExifWidget 1.7 - xxxx.xx.xx
 ===========================================================
 * Bump Dotclear from 2.36 to 2.39
+* Code review (phpstan max)
 
 entryPhotoExifWidget 1.6 - 2025.09.09
 ===========================================================

@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Dotclear\Plugin\entryPhotoExifWidget;
 
 use Dotclear\App;
+use Dotclear\Database\MetaRecord;
 use Dotclear\Helper\Date;
 use Dotclear\Helper\File\Image\ImageMeta;
 use Dotclear\Helper\File\Path;
@@ -176,7 +177,7 @@ class Widgets
         $ctx = App::frontend()->context();
 
         // Not in post context
-        if (!$ctx->exists('posts') || !$ctx->__get('posts')->intField('post_id')) {
+        if (!$ctx->exists('posts') || !($ctx->__get('posts') instanceof MetaRecord) || !$ctx->__get('posts')->intField('post_id')) {
             return '';
         }
 
@@ -192,10 +193,10 @@ class Widgets
         }
 
         # Content lookup
-        $text = $ctx->__get('posts')->strField('post_excerpt_xhtml') . $ctx->__get('posts')->strField('post_content_xhtml');
+        $text = $ctx->__get('posts')->strField('post_excerpt_xhtml') . ' ' . $ctx->__get('posts')->strField('post_content_xhtml');
 
         # Find source images
-        $images = self::getImageSource($text, $w->get('thumbsize'));
+        $images = self::getImageSource($text, is_string($w->get('thumbsize')) ? $w->get('thumbsize') : 't');
 
         # No images
         if (empty($images)) {
@@ -207,7 +208,7 @@ class Widgets
         # Loop through images
         foreach ($images as $img) {
             # List metas
-            $metas = self::getImageMeta($img['source']);
+            $metas = isset($img['source']) && is_string($img['source']) ? self::getImageMeta($img['source']) : [];
 
             $content = '';
             foreach ($metas as $k => $v) {
@@ -224,7 +225,7 @@ class Widgets
             }
 
             # Thumbnail
-            if ($img['thumb']) {
+            if (is_string($img['title']) && is_string($img['thumb'])) {
                 $content = sprintf(self::$widget_thumb, $img['title'], $img['thumb']) .
                 $content;
             }
@@ -234,9 +235,9 @@ class Widgets
         # Paste widget
         return $w->renderDiv(
             (bool) $w->get('content_only'),
-            'photoExifWidget ' . $w->get('class'),
+            'photoExifWidget ' . (is_string($w->get('class')) ? $w->get('class') : ''),
             '',
-            ($w->get('title') ? $w->renderTitle(Html::escapeHTML($w->get('title'))) : '') .
+            (is_string($w->get('title')) && !empty($w->get('title')) ? $w->renderTitle(Html::escapeHTML($w->get('title'))) : '') .
             sprintf(self::$widget_content, $contents)
         );
     }
@@ -251,7 +252,7 @@ class Widgets
         }
 
         # Path and url
-        $p_url  = (string) App::blog()->settings()->get('system')->get('public_url');
+        $p_url  = App::blog()->settings()->get('system')->getStr('public_url', false);
         $p_site = (string) preg_replace('#^(.+?//.+?)/(.*)$#', '$1', App::blog()->url());
         $p_root = App::blog()->publicPath();
 
@@ -378,84 +379,84 @@ class Widgets
         $m = ImageMeta::readMeta($src);
 
         # Title
-        if (!empty($m['Title'])) {
+        if (!empty($m['Title']) && is_string($m['Title'])) {
             $metas['Title'][1] = Html::escapeHTML($m['Title']);
         }
 
         # Description
         if (!empty($m['Description'])) {
-            if (!empty($m['Title']) && $m['Title'] != $m['Description']) {
+            if (!empty($m['Title']) && is_string($m['Description']) && $m['Title'] != $m['Description']) {
                 $metas['Description'][1] = Html::escapeHTML($m['Description']);
             }
         }
 
         # Location
-        if (!empty($m['City'])) {
+        if (!empty($m['City']) && is_string($m['City'])) {
             $metas['Location'][1] .= Html::escapeHTML($m['City']);
         }
-        if (!empty($m['City']) && !empty($m['country'])) {
+        if (!empty($m['City']) && !empty($m['Country'])) {
             $metas['Location'][1] .= ', ';
         }
-        if (!empty($m['country'])) {
+        if (!empty($m['Country']) && is_string($m['Country'])) {
             $metas['Location'][1] .= Html::escapeHTML($m['Country']);
         }
 
         # DateTimeOriginal
-        if (!empty($m['DateTimeOriginal'])) {
-            $dt_ft                        = App::blog()->settings()->get('system')->get('date_format') . ', ' . App::blog()->settings()->get('system')->get('time_format');
-            $dt_tz                        = App::blog()->settings()->get('system')->get('blog_timezone');
+        if (!empty($m['DateTimeOriginal']) && is_string($m['DateTimeOriginal'])) {
+            $dt_ft = App::blog()->settings()->get('system')->getStr('date_format', false) . ', ' . App::blog()->settings()->get('system')->getStr('time_format', false);
+            $dt_tz = App::blog()->settings()->get('system')->getStr('blog_timezone', false);
             $metas['DateTimeOriginal'][1] = Date::dt2str($dt_ft, $m['DateTimeOriginal'], $dt_tz);
         }
 
         # Make
-        if (isset($m['Make'])) {
+        if (isset($m['Make']) && is_string($m['Make'])) {
             $metas['Make'][1] = Html::escapeHTML($m['Make']);
         }
 
         # Model
-        if (isset($m['Model'])) {
+        if (isset($m['Model']) && is_string($m['Model'])) {
             $metas['Model'][1] = Html::escapeHTML($m['Model']);
         }
 
         # Lens
-        if (isset($m['Lens'])) {
+        if (isset($m['Lens']) && is_string($m['Lens'])) {
             $metas['Lens'][1] = Html::escapeHTML($m['Lens']);
         }
 
         # ExposureProgram
-        if (isset($m['ExposureProgram'])) {
+        if (isset($m['ExposureProgram']) && is_string($m['ExposureProgram'])) {
             $metas['ExposureProgram'][1] = $exp_prog[$m['ExposureProgram']] ?? $m['ExposureProgram'];
         }
 
         # Exposure
-        if (!empty($m['Exposure'])) {
+        if (!empty($m['Exposure']) && is_string($m['Exposure'])) {
             $metas['Exposure'][1] = $m['Exposure'] . 's';
         }
 
         # FNumber
-        if (!empty($m['FNumber'])) {
+        if (!empty($m['FNumber']) && is_string($m['FNumber'])) {
             $ap                  = sscanf($m['FNumber'], '%d/%d');
             $metas['FNumber'][1] = $ap ? 'f/' . ($ap[0] / $ap[1]) : $m['FNumber'];
         }
 
         # ISOSpeedRatings
-        if (!empty($m['ISOSpeedRatings'])) {
+        if (!empty($m['ISOSpeedRatings']) && is_string($m['ISOSpeedRatings'])) {
             $metas['ISOSpeedRatings'][1] = $m['ISOSpeedRatings'];
         }
 
         # FocalLength
-        if (!empty($m['FocalLength'])) {
+        if (!empty($m['FocalLength']) && is_string($m['FocalLength'])) {
             $fl                      = sscanf($m['FocalLength'], '%d/%d');
             $metas['FocalLength'][1] = $fl ? $fl[0] / $fl[1] . 'mm' : $m['FocalLength'];
         }
 
         # ExposureBiasValue
-        if (isset($m['ExposureBiasValue'])) {
+        if (isset($m['ExposureBiasValue']) && is_string($m['ExposureBiasValue'])) {
             $metas['ExposureBiasValue'][1] = $m['ExposureBiasValue'];
         }
 
         # MeteringMode
-        if (isset($m['MeteringMode'])) {
+        if (isset($m['MeteringMode']) && is_string($m['MeteringMode'])) {
             $metas['MeteringMode'][1] = isset($met_mod[$m['MeteringMode']]) ?
             $exp_prog[$m['MeteringMode']] : $m['MeteringMode'];
         }
