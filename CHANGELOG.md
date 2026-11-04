@@ -1,3 +1,7 @@
+entryPhotoExifWidget 1.8 - 2026.11.05
+===========================================================
+* Fix categories combo on SQLite
+
 entryPhotoExifWidget 1.7 - 2026.08.12
 ===========================================================
 * Bump Dotclear from 2.36 to 2.39
