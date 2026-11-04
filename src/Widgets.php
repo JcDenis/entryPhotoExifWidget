@@ -39,7 +39,7 @@ class Widgets
         $categories_combo = ['-' => '', __('Uncategorized') => 'null'];
         $categories       = App::blog()->getCategories();
         while ($categories->fetch()) {
-            $categories_combo[Html::escapeHTML($categories->strField('cat_title'))] = $categories->strField('cat_id');
+            $categories_combo[Html::escapeHTML($categories->strField('cat_title'))] = (string) $categories->intField('cat_id');
         }
 
         $thumbnail_combo = [
