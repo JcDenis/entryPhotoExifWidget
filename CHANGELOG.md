@@ -1,6 +1,5 @@
 entryPhotoExifWidget 1.9 - 2026.11.15
 ===========================================================
-* Add Claude to contributors
 * [fix] ISO, program and metering mode shown, shot time, lens from EXIF, images without data, typos
 * [docs] Add a user guide in French, with screenshots
 
