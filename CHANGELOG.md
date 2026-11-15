@@ -1,3 +1,7 @@
+entryPhotoExifWidget 1.9.1 - 2026.11.15
+===========================================================
+* [lang] Do not override core translations
+
 entryPhotoExifWidget 1.9 - 2026.11.15
 ===========================================================
 * [fix] ISO, program and metering mode shown, shot time, lens from EXIF, images without data, typos
