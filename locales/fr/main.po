@@ -35,7 +35,7 @@ msgid "Lens"
 msgstr "Objectif"
 
 msgid "Exposure program"
-msgstr "Program d'exposition"
+msgstr "Programme d'exposition"
 
 msgid "Exposure time"
 msgstr "Temps d'exposition"
@@ -56,7 +56,7 @@ msgid "Metering mode"
 msgstr "Mode de mesure"
 
 msgid "Show empty metadata"
-msgstr "Afficher les métadonées vides"
+msgstr "Afficher les métadonnées vides"
 
 msgid "Category limit:"
 msgstr "Limiter à une catégorie :"
