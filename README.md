@@ -12,6 +12,8 @@ _entryPhotoExifWidget_ is a plugin for the open-source web publishing software c
 
 > Show images exif of an entry in a widget.
 
+A [user guide in French](https://github.com/JcDenis/entryPhotoExifWidget/blob/master/docs/fr/utilisation.md) is available.
+
 ## REQUIREMENTS
 
 * Dotclear 2.39
@@ -27,6 +29,7 @@ Add and configure _Photo Exif Widget_ from widgets manager.
 
 ## LINKS
 
+* [User guide (in French)](https://github.com/JcDenis/entryPhotoExifWidget/blob/master/docs/fr/utilisation.md)
 * [License](https://github.com/JcDenis/entryPhotoExifWidget/blob/master/LICENSE)
 * [Packages & details](https://github.com/JcDenis/entryPhotoExifWidget/releases) (or on [Repository](https://dotclear.org/plugin/detail/entryPhotoExifWidget))
 * [Sources & contributions](https://github.com/JcDenis/entryPhotoExifWidget)
