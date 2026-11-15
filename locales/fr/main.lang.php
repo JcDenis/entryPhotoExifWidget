@@ -59,4 +59,4 @@ L10n::$locales['Pattern'] = 'Multizone';
 L10n::$locales['Partial'] = 'Partielle';
 L10n::$locales['Show images EXIF of an entry in a widget'] = 'Affiche dans un widget les informations EXIF des photos d\'un billet';
 L10n::$locales['Entry Photo EXIF Widget'] = 'Widget des EXIF de photo d\'un billet';
-L10n::$locales['Date:'] = 'Date :';
+L10n::$locales['Date:'] = 'Date :';

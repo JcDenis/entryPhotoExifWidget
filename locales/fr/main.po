@@ -153,4 +153,4 @@ msgstr "Widget des EXIF de photo d'un billet"
 
 
 msgid "Date:"
-msgstr "Date :"
+msgstr "Date :"
