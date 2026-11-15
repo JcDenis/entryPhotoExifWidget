@@ -51,16 +51,14 @@ Une même photo placée plusieurs fois dans un billet n'est listée qu'une seule
 Le widget ne s'affiche pas si :
 
 * le billet ne contient aucune photo du blog ;
-* aucune information cochée n'est disponible pour la photo (par exemple une image sans EXIF) ;
+* aucune information cochée n'est disponible pour aucune des photos (par exemple des images sans EXIF) ;
 * le billet n'est pas dans la catégorie choisie ;
 * le widget est **Hors ligne**.
 
 ## Bon à savoir
 
-* **ISO, programme d'exposition et mode de mesure ne s'affichent jamais** avec des photos d'appareil ordinaires : ces valeurs sont des nombres dans le fichier, et le plugin ne reconnaît que des textes. Les cases existent mais restent sans effet.
-* **L'heure de prise de vue est décalée** : l'heure du fichier est celle de l'appareil, mais le plugin la convertit comme si elle était en heure universelle. Avec un blog en heure de Paris, une photo prise à 15 h 42 s'affiche à 17 h 42 (en été).
-* **L'objectif** n'est lu que s'il est présent dans les métadonnées XMP de la photo : il manque pour beaucoup d'appareils.
+* **L'heure de prise de vue** est affichée telle qu'enregistrée par l'appareil, sans conversion de fuseau horaire.
+* **L'objectif** est lu dans les métadonnées XMP de la photo, ou à défaut dans le champ EXIF de l'objectif. Certains appareils ne l'enregistrent pas du tout.
 * **Le titre, la description et le lieu** viennent des métadonnées IPTC/XMP (un logiciel de photo les renseigne). La description n'apparaît que si le titre existe et qu'il est différent.
-* **Si une photo n'a aucune information à montrer, tout le widget disparaît**, même si les autres photos du billet en ont. Pour les billets mélangeant photos avec et sans EXIF, le résultat peut être surprenant.
-* **Fautes dans les textes** : « Descritpion », « Focal lengh », « Portait mode », « Unknow », « Program d'exposition » et « métadonées vides ».
+* **Une photo sans information à montrer** est simplement ignorée : le widget affiche les autres photos du billet.
 * **Chemin des images** : seules les images dont l'adresse commence par l'adresse publique du blog sont lues. Les images hébergées ailleurs sont ignorées.
