@@ -66,7 +66,7 @@ class Widgets
         )
         ->setting(
             'showmeta_Description',
-            sprintf(__('Show metadata: %s'), __('Descritpion')),
+            sprintf(__('Show metadata: %s'), __('Description')),
             0,
             'check'
         )
@@ -126,7 +126,7 @@ class Widgets
         )
         ->setting(
             'showmeta_FocalLength',
-            sprintf(__('Show metadata: %s'), __('Focal lengh')),
+            sprintf(__('Show metadata: %s'), __('Focal length')),
             1,
             'check'
         )
@@ -219,9 +219,9 @@ class Widgets
                 $content .= sprintf(self::$widget_text, $k, $v[0], $v[1]);
             }
 
-            # No meta
+            # No meta for this image, check next one
             if (empty($content)) {
-                return '';
+                continue;
             }
 
             # Thumbnail
@@ -357,12 +357,12 @@ class Widgets
             4 => __('Shutter priority'),
             5 => __('Creative program'),
             6 => __('Action program'),
-            7 => __('Portait mode'),
+            7 => __('Portrait mode'),
             8 => __('Landscape mode'),
         ];
 
         $met_mod = [
-            0 => __('Unknow'),
+            0 => __('Unknown'),
             1 => __('Average'),
             2 => __('Center-weighted average'),
             3 => __('Spot'),
@@ -404,8 +404,8 @@ class Widgets
         # DateTimeOriginal
         if (!empty($m['DateTimeOriginal']) && is_string($m['DateTimeOriginal'])) {
             $dt_ft = App::blog()->settings()->get('system')->getStr('date_format', false) . ', ' . App::blog()->settings()->get('system')->getStr('time_format', false);
-            $dt_tz = App::blog()->settings()->get('system')->getStr('blog_timezone', false);
-            $metas['DateTimeOriginal'][1] = Date::dt2str($dt_ft, $m['DateTimeOriginal'], $dt_tz);
+            // EXIF date is already the local time of the shot, no time zone conversion
+            $metas['DateTimeOriginal'][1] = Date::dt2str($dt_ft, $m['DateTimeOriginal']);
         }
 
         # Make
@@ -421,11 +421,18 @@ class Widgets
         # Lens
         if (isset($m['Lens']) && is_string($m['Lens'])) {
             $metas['Lens'][1] = Html::escapeHTML($m['Lens']);
+        } elseif (function_exists('exif_read_data')) {
+            // Core only reads lens from XMP, try EXIF LensModel tag
+            $exif = @exif_read_data($src);
+            $lens = is_array($exif) ? ($exif['UndefinedTag:0xA434'] ?? ($exif['LensModel'] ?? null)) : null;
+            if (is_string($lens) && trim($lens) !== '') {
+                $metas['Lens'][1] = Html::escapeHTML(trim($lens));
+            }
         }
 
         # ExposureProgram
-        if (isset($m['ExposureProgram']) && is_string($m['ExposureProgram'])) {
-            $metas['ExposureProgram'][1] = $exp_prog[$m['ExposureProgram']] ?? $m['ExposureProgram'];
+        if (isset($m['ExposureProgram']) && is_scalar($m['ExposureProgram'])) {
+            $metas['ExposureProgram'][1] = $exp_prog[(int) $m['ExposureProgram']] ?? Html::escapeHTML((string) $m['ExposureProgram']);
         }
 
         # Exposure
@@ -440,8 +447,10 @@ class Widgets
         }
 
         # ISOSpeedRatings
-        if (!empty($m['ISOSpeedRatings']) && is_string($m['ISOSpeedRatings'])) {
-            $metas['ISOSpeedRatings'][1] = $m['ISOSpeedRatings'];
+        if (!empty($m['ISOSpeedRatings']) && is_scalar($m['ISOSpeedRatings'])) {
+            $metas['ISOSpeedRatings'][1] = Html::escapeHTML((string) $m['ISOSpeedRatings']);
+        } elseif (!empty($m['ISOSpeedRatings']) && is_array($m['ISOSpeedRatings']) && is_scalar($iso = reset($m['ISOSpeedRatings']))) {
+            $metas['ISOSpeedRatings'][1] = Html::escapeHTML((string) $iso);
         }
 
         # FocalLength
@@ -451,14 +460,13 @@ class Widgets
         }
 
         # ExposureBiasValue
-        if (isset($m['ExposureBiasValue']) && is_string($m['ExposureBiasValue'])) {
-            $metas['ExposureBiasValue'][1] = $m['ExposureBiasValue'];
+        if (isset($m['ExposureBiasValue']) && is_scalar($m['ExposureBiasValue'])) {
+            $metas['ExposureBiasValue'][1] = Html::escapeHTML((string) $m['ExposureBiasValue']);
         }
 
         # MeteringMode
-        if (isset($m['MeteringMode']) && is_string($m['MeteringMode'])) {
-            $metas['MeteringMode'][1] = isset($met_mod[$m['MeteringMode']]) ?
-            $exp_prog[$m['MeteringMode']] : $m['MeteringMode'];
+        if (isset($m['MeteringMode']) && is_scalar($m['MeteringMode'])) {
+            $metas['MeteringMode'][1] = $met_mod[(int) $m['MeteringMode']] ?? Html::escapeHTML((string) $m['MeteringMode']);
         }
 
         return $metas;

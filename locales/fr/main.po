@@ -19,7 +19,7 @@ msgstr "Afficher les EXIF des images d'un billet"
 msgid "Show metadata: %s"
 msgstr "Afficher les métadonnées de : %s"
 
-msgid "Descritpion"
+msgid "Description"
 msgstr "Description"
 
 msgid "Location"
@@ -46,7 +46,7 @@ msgstr "Ouverture"
 msgid "Iso speed rating"
 msgstr "ISO"
 
-msgid "Focal lengh"
+msgid "Focal length"
 msgstr "Longueur de focale"
 
 msgid "Exposure bias value"
@@ -118,13 +118,13 @@ msgstr "Création"
 msgid "Action program"
 msgstr "Action"
 
-msgid "Portait mode"
+msgid "Portrait mode"
 msgstr "Portrait"
 
 msgid "Landscape mode"
 msgstr "Paysage"
 
-msgid "Unknow"
+msgid "Unknown"
 msgstr "Inconnu"
 
 msgid "Average"
@@ -151,3 +151,6 @@ msgstr "Affiche dans un widget les informations EXIF des photos d'un billet"
 msgid "Entry Photo EXIF Widget"
 msgstr "Widget des EXIF de photo d'un billet"
 
+
+msgid "Date:"
+msgstr "Date :"
