@@ -26,7 +26,7 @@ msgid "Location"
 msgstr "Lieu"
 
 msgid "Manufacturer"
-msgstr "Fabriquant"
+msgstr "Fabricant"
 
 msgid "Model"
 msgstr "Modèle"
